@@ -1,16 +1,14 @@
-package com.kaev.automationusage.service;
+package com.kaev.supporthours.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.kaev.automationusage.model.LogEntry;
-import com.kaev.automationusage.model.ReportRow;
-import com.kaev.automationusage.repository.LogEntryRepository;
+import com.kaev.supporthours.model.LogEntry;
+import com.kaev.supporthours.model.ReportRow;
+import com.kaev.supporthours.repository.LogEntryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +30,7 @@ public class ReportService {
 			String project = l.getProject();
 			int month = Integer.parseInt(l.getTimestamp().substring(4,6));
 			int index = month-1;
-			String user = l.getUsername();
+			int workminutes = l.getWorkminutes();
 			
 			Optional<ReportRow> existingReportRow = reportRows.stream().filter(r -> r.getProject().equals(project)).findFirst();
 			
@@ -40,20 +38,15 @@ public class ReportService {
 				
 				ReportRow r = existingReportRow.get();
 				
-				//használat növelée
-				r.setUsagesInTheMonth(index, r.getUsagesInTheMonth(index) + 1); 
-				//használó hozzáadása, ha még nem szerepel
-				if(!r.getUsersInTheMonth(index).contains(user)) {
-					r.setUsersInTheMonth(index, user);
-				}	
+				//munkaórák számának növelée
+				r.setUsages(index, r.getUsages(index) + workminutes); 
 				
 			} else {
 				
 				//ha a projektnek nincs még riport sora
 				ReportRow newReportRow = initializeNewRepotRow();
 				newReportRow.setProject(project);
-				newReportRow.setUsagesInTheMonth(index, 1);
-				newReportRow.setUsersInTheMonth(index, user);
+				newReportRow.setUsages(index, workminutes);
 				reportRows.add(newReportRow);
 				
 			}
@@ -69,10 +62,8 @@ public class ReportService {
 		List<Integer> usages = new ArrayList<Integer>();
 			for (int i=0; i<=11; i++)
 				usages.add(0);
-		Map<Integer, List<String>> users = new HashMap<Integer, List<String>>();
-			for (int i=0; i<=11; i++)
-				users.put(i, new ArrayList<String>());
-		return new ReportRow("",usages,users);
+
+		return new ReportRow("",usages);
 		
 	}
 

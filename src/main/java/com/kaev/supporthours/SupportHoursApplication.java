@@ -1,13 +1,13 @@
-package com.kaev.automationusage;
+package com.kaev.supporthours;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AutomationusageApplication {
+public class SupportHoursApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AutomationusageApplication.class, args);
+		SpringApplication.run(SupportHoursApplication.class, args);
 	}
 
 }
